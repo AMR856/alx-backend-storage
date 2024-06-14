@@ -1,3 +1,4 @@
+-- This script is killing
 DELIMITER $$
 DROP PROCEDURE IF EXISTS AddBonus;
 CREATE PROCEDURE AddBonus(
