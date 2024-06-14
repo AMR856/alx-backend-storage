@@ -1,2 +1,2 @@
-// finding now
+// Finding now
 db.school.find()

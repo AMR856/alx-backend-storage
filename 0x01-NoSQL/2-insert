@@ -1,2 +1,2 @@
-// inserting now
+// Inserting now
 db.school.insert({'name': 'Holberton school'})
