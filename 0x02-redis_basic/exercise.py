@@ -7,10 +7,24 @@ import uuid
 
 
 def count_calls(method: Callable) -> Callable:
+    """Counter here"""
     @wraps(method)
     def wrapper(self, *args, **kwargs) -> Any:
         self._redis.incr(method.__qualname__)
         return method(self, *args, **kwargs)
+    return wrapper
+
+
+def call_history(method: Callable) -> Callable:
+    """History repeater"""
+    @wraps(method)
+    def wrapper(self, *args, **kwargs) -> Any:
+        input_key = f'{method.__qualname__}:inputs'
+        output_key = f'{method.__qualname__}:outputs'
+        self._redis.rpush(input_key, str(args))
+        output = method(self, *args, **kwargs)
+        self._redis.rpush(output_key, output)
+        return output
     return wrapper
 
 
@@ -21,6 +35,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """I'm storing in here as you can see"""
