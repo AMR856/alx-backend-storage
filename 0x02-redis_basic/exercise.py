@@ -38,7 +38,7 @@ def replay(method: Callable) -> None:
     output_key = f'{method_qualifed_name}:outputs'
     if redis_storage.exists(method_qualifed_name):
         calls_count = int(redis_storage.get(method_qualifed_name))
-    print(f'{method_qualifed_name} was called {calls_count}:')
+    print(f'{method_qualifed_name} was called {calls_count} times:')
     inputs = redis_storage.lrange(input_key, 0, -1)
     outputs = redis_storage.lrange(output_key, 0, -1)
     for input, output in zip(inputs, outputs):
