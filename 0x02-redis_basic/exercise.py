@@ -14,6 +14,7 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     """History repeater"""
     @wraps(method)
@@ -26,11 +27,13 @@ def call_history(method: Callable) -> Callable:
         return output
     return wrapper
 
-def replay(method : Callable) -> None:
+
+def replay(method: Callable) -> None:
     """I don't remember what does this function do"""
+    print(method)
     if method is None or not hasattr(method, '__self__'):
         return
-    redis_storage = getattr('method.__self__', '_redis', None)
+    redis_storage = getattr(method.__self__, '_redis')
     method_qualifed_name = method.__qualname__
     input_key = f'{method_qualifed_name}:inputs'
     output_key = f'{method_qualifed_name}:outputs'
@@ -41,10 +44,11 @@ def replay(method : Callable) -> None:
     outputs = redis_storage.lrange(output_key, 0, -1)
     for input, output in zip(inputs, outputs):
         print("{}(*{}) -> {}".format(
-            input,
+            method_qualifed_name,
             input.decode('utf-8'),
-            output
+            output.decode('utf-8')
         ))
+
 
 class Cache:
     """A caching class I think"""
