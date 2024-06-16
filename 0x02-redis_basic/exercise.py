@@ -30,7 +30,6 @@ def call_history(method: Callable) -> Callable:
 
 def replay(method: Callable) -> None:
     """I don't remember what does this function do"""
-    print(method)
     if method is None or not hasattr(method, '__self__'):
         return
     redis_storage = getattr(method.__self__, '_redis', None)
@@ -46,7 +45,7 @@ def replay(method: Callable) -> None:
         print("{}(*{}) -> {}".format(
             method_qualifed_name,
             input.decode('utf-8'),
-            output.decode('utf-8')
+            output
         ))
 
 
