@@ -33,13 +33,13 @@ def replay(method: Callable) -> None:
     print(method)
     if method is None or not hasattr(method, '__self__'):
         return
-    redis_storage = getattr(method.__self__, '_redis')
+    redis_storage = getattr(method.__self__, '_redis', None)
     method_qualifed_name = method.__qualname__
     input_key = f'{method_qualifed_name}:inputs'
     output_key = f'{method_qualifed_name}:outputs'
     if redis_storage.exists(method_qualifed_name):
         calls_count = int(redis_storage.get(method_qualifed_name))
-    print(f'{method_qualifed_name} was called {calls_count}')
+    print(f'{method_qualifed_name} was called {calls_count}:')
     inputs = redis_storage.lrange(input_key, 0, -1)
     outputs = redis_storage.lrange(output_key, 0, -1)
     for input, output in zip(inputs, outputs):
@@ -65,7 +65,8 @@ class Cache:
         self._redis.set(the_key, data)
         return the_key
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
+    def get(self, key: str,
+            fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
         """The getter"""
         the_returned_object = self._redis.get(key)
         if the_returned_object is None:
