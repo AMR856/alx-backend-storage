@@ -11,7 +11,3 @@ BEGIN
     END IF;
 END$$
 DELIMITER ;
-
--- cat 10-init.sql | sudo mysql -uroot -p Trying_Hassan
--- cat 10-div.sql | sudo mysql -uroot -p Trying_Hassan
--- echo "SELECT (a / b) FROM numbers;" | sudo mysql -uroot -p Trying_Hassan
